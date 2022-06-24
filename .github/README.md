@@ -32,10 +32,10 @@ The results are written in a file named `n01.sample`.
 The first line of the file is the number of length-$n$ sequences
 in this subset, which equals to $4^{n-1}$ for the default alphabet
 {A, C, G, T}.
-The remaining lines each contain one sequence.
+The remaining lines each contains one sequence.
 
 - `./LSB-statistics.out` can be used to reproduce the 
-experimental results in [our paper]{https://arxiv.org/abs/2206.03097}.
+experimental results in [our paper](https://arxiv.org/abs/2206.03097).
 It takes three parameters:
   - `n`: integer, the length of the sequences.
   - `r`: integer, the radius of the neighborhood of a sequence.
