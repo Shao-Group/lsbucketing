@@ -222,7 +222,7 @@ int hasCollision(AVLNode* hs, AVLNode* ht){
 
 int main(int argc, char* argv[]){
     if(argc != 4 || (argv[3][0] != 'w' && argv[3][0] != 's')){
-	printf("usage: LSB-statistics.out k r w(hole)|s(ample)\n");
+	printf("usage: LSB-statistics.out n r w(hole)|s(ample)\n");
 	return 1;
     }
 

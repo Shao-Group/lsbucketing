@@ -91,7 +91,7 @@ int editDist3(const char* s1, const int l1, const char* s2, const int l2, const 
 
 kmer encode(const char* str, const int k){
     kmer enc = 0;
-    int i, x;
+    int i, x = 0;
     for(i=0; i<k; i+=1){
 	switch(str[i]){
 	case 'A': x=0; break;
@@ -118,31 +118,45 @@ char* decode(const kmer enc, const int k, char* str){
     return str;
 }
 
+static inline void reportInputError(const char* filename, const char* msg){
+    fprintf(stderr, "error reading file %s: %s\n", filename, msg);
+    exit(1);
+}
+
 kmer* readCentersFromFile(const char* filename, const int k,
 			  size_t* numOfCenters){
-  FILE* fin = fopen(filename, "r");
-
-  fscanf(fin, "%zu\n", numOfCenters);
-  kmer* centers = malloc_harder(sizeof *centers *(*numOfCenters));
-
-  int buffersize = k+2;//for \n and \0
-  char kmer_str[buffersize];
-
-  size_t i;
-  for(i=0; i<*numOfCenters; i+=1){
-      fgets(kmer_str, buffersize, fin);
-      centers[i] = encode(kmer_str, k);
-  }
-  
-  fclose(fin);
-  return centers;
+    FILE* fin = fopen(filename, "r");
+    
+    if(fscanf(fin, "%zu\n", numOfCenters) != 1){
+	reportInputError(filename, "num of centers");
+    }
+    
+    kmer* centers = malloc_harder(sizeof *centers *(*numOfCenters));
+    
+    int buffersize = k+2;//for \n and \0
+    char kmer_str[buffersize];
+    
+    size_t i;
+    for(i=0; i<*numOfCenters; i+=1){
+	if(fgets(kmer_str, buffersize, fin) == NULL){
+	    char msg[100];
+	    sprintf(msg, "center[%zu]", i);
+	    reportInputError(filename, msg);
+	}
+	centers[i] = encode(kmer_str, k);
+    }
+    
+    fclose(fin);
+    return centers;
 }
 
 int* readCliquesFromFile(const char* filename, const int k, kmer km1Mask,
 			 kmer*** centers, size_t* numOfCenters){
     FILE* fin = fopen(filename, "r");
 
-    fscanf(fin, "%zu\n", numOfCenters);
+    if(fscanf(fin, "%zu\n", numOfCenters) != 1){
+	reportInputError(filename, "num of centers");
+    }
     int* sizes = malloc_harder(sizeof *sizes *(*numOfCenters));
     kmer** c = malloc_harder(sizeof *c *(*numOfCenters));
 
@@ -153,7 +167,11 @@ int* readCliquesFromFile(const char* filename, const int k, kmer km1Mask,
     int* cur;
     for(i=0; i<*numOfCenters; i+=1){
 	cur = sizes+i;
-	fscanf(fin, "%d ", cur);
+	if(fscanf(fin, "%d ", cur) != 1){
+	    char msg[100];
+	    sprintf(msg, "center[%zu]", i);
+	    reportInputError(filename, msg);
+	}
 	c[i] = malloc_harder(sizeof *(c[i]) *(*cur));
 	for(j=0; j<(*cur)-1; j+=1){
 	    tmp = getdelim(&kmer_str, &buffersize, ' ', fin);

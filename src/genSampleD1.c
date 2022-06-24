@@ -57,13 +57,13 @@ void printSamples(int k, char* samples, size_t size){
 
 int main(int argc, char* argv[]){
     if(argc != 2){
-	printf("usage: genSampleD1.out k\n");
+	printf("usage: genSampleD1.out n\n");
 	return 1;
     }
 
     int k = atoi(argv[1]);
     if(k <= 1){
-	printf("input k should be at least 2\n");
+	printf("input n should be at least 2\n");
 	return 1;
     }
 

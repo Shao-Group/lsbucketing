@@ -1,46 +1,28 @@
 CC=gcc
-CFLAGS+= -m64 -g -Wall
+CFLAGS+= -m64 -Wall -O3
 LDFLAGS=
-LIBS=
+LIBS= -Ilib
 INC= 
-ALLDEP:= $(patsubst %.h,%.o,$(wildcard *.h))
-ALLILP:= $(wildcard *_ILP.c)
+ALLDEP:= $(patsubst %.h,%.o,$(wildcard lib/*.h))
 
-.PHONY: test
+.PHONY: all
 
-test: $(ALLDEP) test.out partitionByLayers.out
+all: $(ALLDEP) $(patsubst src/%.c,%.out, $(wildcard src/*.c))
 
-product: CFLAGS = -O3
-product: $(ALLDEP) $(patsubst %.c,%.out,$(filter-out $(patsubst %.o,%.c,$(ALLDEP)) $(ALLILP), $(wildcard *.c)))
-
-%.out: %.c $(ALLDEP)
+%.out: src/%.c $(ALLDEP)
 	$(CC) $(CFLAGS) -o $@ $^ $(LIBS)
-%.o: %.c makefile
+%.o: lib/%.c makefile
 	$(CC) $(CFLAGS) -MMD -c $< -o $@
-
-bmerVector.out: bmerVector.c $(ALLDEP)
-	$(CC) $(CFLAGS) -o $@ $^ $(LIBS) -lm
-
-clique%.MaxID: clique%.txt
-	grep -oE 'has [0-9]+' $^ | sed 's/has //' > $@; \
-	awk -F' ' 'NR>4 {if(NF){sub(/[ \t]+$$/, ""); print NF, $$0}else{exit}}' $^ >> $@
-
-%.MaxID: %.txt
-	grep -oE '[0-9]+' $^ | tail -1 > $@; \
-	sed -n '7 s/\r$$//p' $^ | sed 's/ /\n/g' >> $@
-
-#gurobi make
-%_ILP: %_ILP.c $(ALLDEP)
-	$(CC) $(CFLAGS) -o $@ $^ -I$(INC) $(LDFLAGS) -lm
 
 .PHONY: clean
 
 clean:
 	rm -rf *.out *.o *.dSYM *.d
+	rm -rf lib/*.o lib/*.d
 
 .PHONY: realclean clean-backups
 
 realclean: clean clean-backups
 
 clean-backups:
-	rm -rf *~ #*#     
+	rm -rf *~ #*#
