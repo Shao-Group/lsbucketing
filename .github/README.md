@@ -12,10 +12,15 @@ multiple buckets such that any two sequences
 within an edit distance of $d_1$ are guaranteed to share at least one bucket,
 and any two sequences with an edit distance at least $d_2$
 are guaranteed to be mapped into disjoint buckets.
+Here we provide implementation of an optimal $(1, 2)$-sensitive bucketing
+function that assigns to each length-$n$ sequence $n$ buckets.
+If the user is interested in a small subset of all length-$n$ sequences,
+we also provide an efficient function that computes the buckets in the
+above $(1,2)-sensitive bucketing function for a specific sequence.
+
 A subset of fixed-length sequences is said to be $(1, 1)$-guaranteed
 if they can be used to label all the buckets such that the resulting
 bucketing function is $(1, 3)$-sensitive.
-
 Here we provide implementation of both the construction of a 
 minimum $(1,1)$-guaranteed subset and the efficient linear time 
 membership query of such a set.
@@ -26,6 +31,15 @@ cd lsbucketing
 make
 ```
 ### Usage
+- To generate buckets for all length $n$ sequences, run
+`./assignBuckets.out n` where `n` is the length of the sequences.
+The results are written in a file named `buckets-n.txt`.
+This program also verifies the correctness of 
+the efficient algorithm that generates
+buckets for a specific sequence without a global counter.
+This algorithm is provided as the function 
+`assignBuckets` in `src/assignBuckets.c`.
+
 - To generate a $(1,1)$-guaranteed subset, run
 `./genSampleD1.out n` where `n` is the length of the sequences.
 The results are written in a file named `n01.sample`.
