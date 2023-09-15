@@ -13,10 +13,10 @@ within an edit distance of $d_1$ are guaranteed to share at least one bucket,
 and any two sequences with an edit distance at least $d_2$
 are guaranteed to be mapped into disjoint buckets.
 Here we provide implementation of an optimal $(1, 2)$-sensitive bucketing
-function that assigns to each length-$n$ sequence $n$ buckets.
-If the user is interested in a small subset of all length-$n$ sequences,
+function that assigns to each length-$`n`$ sequence $n$ buckets.
+If the user is interested in a small subset of all length-$`n`$ sequences,
 we also provide an efficient function that computes the buckets in the
-above $(1,2)-sensitive bucketing function for a specific sequence.
+above $(1,2)$-sensitive bucketing function for a specific sequence.
 
 A subset of fixed-length sequences is said to be $(1, 1)$-guaranteed
 if they can be used to label all the buckets such that the resulting
@@ -43,21 +43,21 @@ This algorithm is provided as the function
 - To generate a $(1,1)$-guaranteed subset, run
 `./genSampleD1.out n` where `n` is the length of the sequences.
 The results are written in a file named `n01.sample`.
-The first line of the file is the number of length-$n$ sequences
+The first line of the file is the number of length-$`n`$ sequences
 in this subset, which equals to $4^{n-1}$ for the default alphabet
 {A, C, G, T}.
 The remaining lines each contains one sequence.
 
 - `./LSB-statistics.out` can be used to reproduce the 
-experimental results in [our paper](https://arxiv.org/abs/2206.03097).
+experimental results in [our paper](https://almob.biomedcentral.com/articles/10.1186/s13015-023-00234-2).
 It takes three parameters:
   - `n`: integer, the length of the sequences.
   - `r`: integer, the radius of the neighborhood of a sequence.
-  - `w|s`: char, the option `w` uses all the length-$n$ sequences as the 
+  - `w|s`: char, the option `w` uses all the length-$`n`$ sequences as the 
   bucketing set; the option `s` uses a $(1,1)$-guaranteed subset.
   The program utilizes the efficient membership query function
-  `isInSampleD1` defined in `lib/util.h` so it is not needed to 
-  explicitly generate the $(1,1)$-guaranteed subset.
+  `isInSampleD1` defined in `lib/util.h` so the $(1,1)$-guaranteed subset
+  does not need to be explicitly generated.
 
   Results for three LSB functions are given in the paper, the corresponding
   parameters are
